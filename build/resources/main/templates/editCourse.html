@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+
+    <!--	Title-->
+    <title>Course</title>
+
+    <!--	Metatags-->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Virtual Teacher Project">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--	CSS links-->
+    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap4/bootstrap.min.css"
+          th:href="@{/css/bootstrap4/bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" href="../static/plugins/font-awesome-4.7.0/css/font-awesome.min.css"
+          th:href="@{/plugins/font-awesome-4.7.0/css/font-awesome.min.css}">
+    <link rel="stylesheet" type="text/css" href="../static/plugins/OwlCarousel2-2.2.1/owl.carousel.css"
+          th:href="@{/plugins/OwlCarousel2-2.2.1/owl.carousel.css}">
+    <link rel="stylesheet" type="text/css" href="../static/plugins/OwlCarousel2-2.2.1/owl.theme.default.css"
+          th:href="@{/plugins/OwlCarousel2-2.2.1/owl.theme.default.css}">
+    <link rel="stylesheet" type="text/css" href="../static/plugins/OwlCarousel2-2.2.1/animate.css"
+          th:href="@{/plugins/OwlCarousel2-2.2.1/animate.css}">
+    <link rel="stylesheet" type="text/css" href="../static/css/course.css" th:href="@{/css/course.css}">
+    <link rel="stylesheet" type="text/css" href="../static/css/course_responsive.css"
+          th:href="@{/css/course_responsive.css}">
+
+</head>
+<body>
+
+<div class="super_container">
+
+    <header class="header">
+
+        <!-- Header Content -->
+
+        <div class="header_container">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <div class="header_content d-flex flex-row align-items-center justify-content-start">
+                            <div class="logo_container mr-auto">
+                                <a href="index.html" th:href="@{~/index}">
+                                    <div class="logo_text">
+                                        VirtualTeacher
+                                    </div>
+                                </a>
+                            </div>
+                            <nav class="main_nav_contaner">
+                                <ul class="main_nav">
+                                    <li>
+                                        <a href="index.html" th:href="@{~/index}">
+                                            Home
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="courses.html" th:href="@{~/courses}">
+                                            Courses
+                                        </a>
+                                    </li>
+
+                                    <li sec:authorize="hasAnyRole('ROLE_STUDENT')">
+                                        <a href="enrolledCourses.html" th:href="@{~/enrolledCourses}">
+                                            Enrolled Courses
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-item dropdown" sec:authorize="hasAnyRole('ROLE_TEACHER')">
+                                        <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownMenuLink"
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Teacher Courses
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                            <a class="dropdown-item" href="myCoursesView.html" th:href="@{~/myCoursesView}">My Courses</a>
+                                            <a class="dropdown-item" href="createCourse.html" th:href="@{~/createCourse}">Create
+                                                Course</a>
+                                        </div>
+                                    </li>
+
+                                    <li sec:authorize="anonymous">
+                                        <a href="login.html" th:href="@{~/login}">
+                                            Sign in
+                                        </a>
+                                    </li>
+
+                                    <li sec:authorize="anonymous">
+                                        <a href="registration.html" th:href="@{~/registration}">
+                                            Registration
+                                        </a>
+                                    </li>
+
+                                    <li sec:authorize="hasAnyRole('ROLE_STUDENT')">
+                                        <a href="myCoursesView.html" th:href="@{~/myCoursesView}">
+                                            My Courses
+                                        </a>
+                                    </li>
+                                    <li sec:authorize="hasAnyRole('ROLE_ADMIN')">
+                                        <a href="adminCourses.html" th:href="@{~/adminCourses}">
+                                            Admin Panel
+                                        </a>
+                                    </li>
+                                    <li sec:authorize="hasAnyRole('ROLE_STUDENT','ROLE_TEACHER', 'ROLE_ADMIN')">
+                                        <a th:href="@{/logout}">
+                                            Logout
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            </nav>
+                            <div class="header_content_right ml-auto text-right">
+                                <div class="header_search">
+                                    <div class="search_form_container">
+                                        <form id="search_form" class="search_form trans_400" th:action="@{/courses}">
+                                            <input type="search" class="header_search_input trans_400" name="search"
+                                                   id="search" placeholder="What to learn today?"
+                                                   required="required">
+                                            <div class="search_button">
+                                                <i class="fa fa-search" aria-hidden="true"></i>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+
+                                <!-- Hamburger -->
+
+                                <div class="user container">
+                                    <a href="profile.html" th:href="@{/edit}">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+
+
+
+                                                <img class="rounded-circle"
+                                                     src="../static/img/intro.jpg"
+                                                     th:src="${(path != null && !#strings.isEmpty(path)) ? path : '/img/admin-create.png'}" width="50"
+                                                     height="50"
+                                                     th:width="50" th:height="50" >
+                                                <!--                                                     th:alt="${loggedUser.getPhoto().getFileName()}" alt="user-pic">-->
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <span
+                                                        th:if="${loggedUser != null}"  th:text="${loggedUser.getFirstName() + ' ' + loggedUser.getLastName()}">
+                                                    Firstname Lastname
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                    </a>
+                                </div>
+                                <div class="hamburger menu_mm">
+                                    <i class="fa fa-bars menu_mm" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </header>
+    <!-- Menu -->
+
+    <div class="menu d-flex flex-column align-items-end justify-content-start text-right menu_mm trans_400">
+        <div class="menu_close_container">
+            <div class="menu_close">
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+        <div class="search">
+            <form action="#" class="header_search_form menu_mm">
+                <input type="search" class="search_input menu_mm" placeholder="What to learn today?"
+                       required="required">
+                <button class="header_search_button d-flex flex-column align-items-center justify-content-center menu_mm">
+                    <i class="fa fa-search menu_mm" aria-hidden="true"></i>
+                </button>
+            </form>
+        </div>
+        <nav class="menu_nav">
+            <ul class="menu_mm">
+                <li class="menu_mm">
+                    <a href="index.html" th:href="@{~/index}">
+                        Home
+                    </a>
+                </li>
+                <li class="menu_mm">
+                    <a href="courses.html" th:href="@{~/courses}">
+                        Courses
+                    </a>
+                </li>
+                <li class="menu_mm" sec:authorize="anonymous">
+                    <a href="login.html" th:href="@{~/login}">
+                        Login
+                    </a>
+                </li>
+                <li class="menu_mm" sec:authorize="anonymous">
+                    <a href="registration.html" th:href="@{~/registration}">
+                        Registration
+                    </a>
+                </li>
+                <li class="menu_mm" sec:authorize="hasAnyRole('ROLE_TEACHER')">
+                    <a href="createCourse.html" th:href="@{~/createCourse}">
+                        Create Course
+                    </a>
+                </li>
+                <li class="menu_mm" sec:authorize="hasAnyRole('ROLE_STUDENT','ROLE_TEACHER')">
+                    <a href="myCoursesView.html" th:href="@{~/myCoursesView}">
+                        My Courses
+                    </a>
+                </li>
+                <li class="menu_mm" sec:authorize="hasAnyRole('ROLE_ADMIN')">
+                    <a href="adminCourses.html" th:href="@{~/adminCourses}">
+                        Admin Panel
+                    </a>
+                </li>
+                <li class="menu_mm" sec:authorize="hasAnyRole('ROLE_STUDENT','ROLE_TEACHER', 'ROLE_ADMIN')">
+                    <a href="profile.html" th:href="@{/edit}">
+                        Profile
+                    </a>
+                </li>
+                <li class="menu_mm" sec:authorize="hasAnyRole('ROLE_STUDENT','ROLE_TEACHER', 'ROLE_ADMIN')">
+                    <a th:href="@{/logout}">
+                        Logout
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+    </div>
+
+    <form id="courseform" th:object="${course}" th:action="@{/{id}/saveCourse(id=${course.id})}" th:method="PUT">
+        <fieldset>
+            <!-- Intro COURSE TITLE -->
+            <div class="intro">
+                <!--		<div class="intro_background parallax-window" data-parallax="scroll" data-image-src="images/intro.jpg" data-speed="0.8"></div>-->
+                <div class="intro_background" th:style="'background-image:url(\'' + ${pathCoursePhoto} + '\');'"></div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <div class="intro_container d-flex flex-column align-items-start justify-content-end">
+                                <div class="intro_content">
+                                    <div class="intro_title">
+                                        <input type="text" th:field="${course.title}"
+                                               name="title" id="title" placeholder="Course title"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course BODY -->
+            <div class="course">
+                <div class="course_top"></div>
+                <div class="container">
+                    <div class="row row-lg-eq-height">
+                        <!-- Panels -->
+                        <div class="col-lg-9">
+                            <div class="tab_panels">
+                                <!-- Tabs -->
+                                <div class="course_tabs_container">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-lg-9">
+                                                <div class="tabs d-flex flex-row align-items-center justify-content-start">
+                                                    <div class="tab">description</div>
+                                                    <div class="tab active">curriculum</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Description -->
+                                <div class="tab_panel description ">
+                                    <div class="panel_title">About this course</div>
+                                    <div class="panel_text">
+                                        <label th:for="${course.description}">Description</label>
+                                        <input th:field="*{description}">
+                                    </div>
+                                </div>
+
+                                <!-- Curriculum LECTURES -->
+                                <fieldset id="lectures">
+                                    <div class="tab_panel curriculum active">
+                                        <div class="panel_title">Lectures:</div>
+                                            <a class="sidebar_top sidebar_title"
+                                               id="addLecture"
+                                               th:href="@{/editCourse/{id}/addLecture(id=${course.id})}" th:style="'color:white;'">+ Add lecture
+                                            </a>
+                                        <div class="curriculum_items">
+                                            <div class="cur_item" th:each="lecture:${course.lectures}">
+                                                <div class="cur_title_container d-flex flex-row align-items-start justify-content-start">
+                                                    <div class="cur_title">Lecture:
+                                                    </div>
+                                                    <!--                                        <div class="cur_num ml-auto">Grade: 50%</div>-->
+                                                </div>
+                                                <div class="cur_item_content">
+                                                    <div class="cur_item_title" th:text="${lecture.title}">Lecture name</div>
+                                                    <div class="cur_item_text" >
+                                                        <p th:text="${lecture.description}"></p>
+                                                    </div>
+                                                    <div class="cur_contents">
+                                                        <ul>
+                                                            <li>
+                                                                <i class="fa fa-folder" aria-hidden="true"></i><span>1 lecture video, 1 assignment, 1 assignment solution</span>
+                                                                <ul>
+                                                                    <li class="d-flex flex-row align-items-center justify-content-start">
+                                                                        <i class="fa fa-video-camera" aria-hidden="true"></i><span>Video: <a
+                                                                            href="#">Greetings and Introductions</a></span>
+                                                                        <div class="cur_time ml-auto"><i class="fa fa-clock-o"
+                                                                                                         aria-hidden="true"></i><span>15 minutes</span>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li class="d-flex flex-row align-items-center justify-content-start">
+                                                                        <i class="fa fa-file" aria-hidden="true"></i><span>Assignment description: <a
+                                                                            th:href="@{|/${lecture.assignmentTask.id}/download|}">Download</a></span>
+                                                                        <!--                                                            <i class="fa fa-file" aria-hidden="true"-->
+                                                                        <!--                                                               th:object="${lecture.getFile}"></i><span>Assignment description: <a-->
+                                                                        <!--                                                                href="#">Download</a></span>-->
+                                                                    </li>
+                                                                </ul>
+                                                            </li>
+                                                            <!--                                                <li class="d-flex flex-row align-items-center justify-content-start">-->
+                                                            <!--                                                    <i class="fa fa-graduation-cap"-->
+                                                            <!--                                                       aria-hidden="true"></i><span>Graded: </span>-->
+                                                            <!--                                                    <div class="cur_time ml-auto"><span>69/100 Points</span></div>-->
+                                                            <!--                                                </li>-->
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+
+                        <!-- Sidebar -->
+                        <div class="col-lg-3">
+                            <div class="sidebar">
+                                <div class="sidebar_background"></div>
+                                <div class="sidebar_top">
+                                    <input form="courseform" class="sidebar_top sidebar_title" type="submit"
+                                           name="coursesave" id="coursesave" value="Save">
+                                </div>
+                                <div class="sidebar_content">
+
+                                    <!-- Features -->
+                                    <div class="sidebar_section features">
+                                        <div class="sidebar_title">Course Features</div>
+                                        <div class="features_content">
+                                            <ul class="features_list">
+                                                <!-- Feature -->
+                                                <li class="d-flex flex-row align-items-start justify-content-start">
+                                                    <div class="feature_title">
+                                                        <i class="fa fa-thumbs-up"
+                                                           aria-hidden="true"></i>
+                                                        <span>Pass Percentage</span>
+                                                    </div>
+                                                    <div class="feature_text ml-auto">
+                                                        <input type="number" th:field="${course.grade}" th:alt="30"
+                                                               name="passgrade"
+                                                               id="mingrade" placeholder="Minimum grade"/>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+    <!-- Footer -->
+
+    <footer class="footer">
+        <div class="copyright">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <div class="copyright_content d-flex flex-md-row flex-column align-items-md-center align-items-start justify-content-start">
+                            <div class="cr">
+                                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                                Copyright &copy;<script>document.write(new Date().getFullYear());</script>
+                                All rights reserved | This template is made with <i class="fa fa-heart-o"
+                                                                                    aria-hidden="true"></i> by <a
+                                    href="https://colorlib.com" target="_blank">Colorlib</a>
+                                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                            </div>
+                            <div class="cr_right ml-md-auto">
+                                <div class="footer_social">
+                                    <span class="cr_social_title">follow us</span>
+                                    <ul>
+                                        <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<!--	JavaScript links-->
+<script src="../static/js/jquery-3.2.1.min.js" th:src="@{/js/jquery-3.2.1.min.js}"></script>
+<script src="../static/css/bootstrap4/popper.js" th:src="@{/css/bootstrap4/popper.js}"></script>
+<script src="../static/css/bootstrap4/bootstrap.min.js" th:src="@{/css/bootstrap4/bootstrap.min.js}"></script>
+<script src="../static/plugins/OwlCarousel2-2.2.1/owl.carousel.js"
+        th:src="@{/plugins/OwlCarousel2-2.2.1/owl.carousel.js}"></script>
+<script src="../static/plugins/easing/easing.js" th:src="@{/plugins/easing/easing.js}"></script>
+<script src="../static/plugins/parallax-js-master/parallax.min.js"
+        th:src="@{/plugins/parallax-js-master/parallax.min.js}"></script>
+<script src="../static/plugins/progressbar/progressbar.min.js"
+        th:src="@{/plugins/progressbar/progressbar.min.js}"></script>
+<script src="../static/js/course.js" th:src="@{/js/course.js}"></script>
+
+</body>
+</html>

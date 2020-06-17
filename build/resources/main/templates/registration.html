@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+
+    <!--    Title-->
+    <title>Sign-up</title>
+
+    <!--    Metatags-->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Virtual Teacher Project">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--    CSS links-->
+    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap4/bootstrap.min.css"
+          th:href="@{/css/bootstrap4/bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" href="../static/plugins/font-awesome-4.7.0/css/font-awesome.min.css"
+          th:href="@{/plugins/font-awesome-4.7.0/css/font-awesome.min.css}">
+    <link rel="stylesheet" type="text/css" href="../static/plugins/OwlCarousel2-2.2.1/owl.carousel.css"
+          th:href="@{/plugins/OwlCarousel2-2.2.1/owl.carousel.css}">
+    <link rel="stylesheet" type="text/css" href="../static/plugins/OwlCarousel2-2.2.1/owl.theme.default.css"
+          th:href="@{/plugins/OwlCarousel2-2.2.1/owl.theme.default.css}">
+    <link rel="stylesheet" type="text/css" href="../static/plugins/OwlCarousel2-2.2.1/animate.css"
+          th:href="@{/plugins/OwlCarousel2-2.2.1/animate.css}">
+    <link rel="stylesheet" type="text/css" href="../static/css/main_styles.css" th:href="@{/css/main_styles.css}">
+    <link rel="stylesheet" type="text/css" href="../static/css/responsive.css" th:href="@{/css/responsive.css}">
+    <link rel="stylesheet" type="text/css" href="../static/css/loginRegStyle.css" th:href="@{/css/loginRegStyle.css}">
+
+</head>
+
+<body>
+
+<div class="super_container">
+
+    <!-- Header -->
+    <header class="header">
+
+        <!-- Header Content -->
+
+        <div class="header_container">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <div class="header_content d-flex flex-row align-items-center justify-content-start">
+                            <div class="logo_container mr-auto">
+                                <a href="index.html" th:href="@{index}">
+                                    <div class="logo_text">
+                                        VirtualTeacher
+                                    </div>
+                                </a>
+                            </div>
+                            <nav class="main_nav_contaner">
+                                <ul class="main_nav">
+                                    <li>
+                                        <a href="index.html" th:href="@{index}">
+                                            Home
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="courses.html" th:href="@{courses}">
+                                            Courses
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-item dropdown" sec:authorize="hasAnyRole('ROLE_TEACHER')">
+                                        <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownMenuLink"
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Teacher Courses
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                            <a class="dropdown-item" href="myCoursesView.html"
+                                               th:href="@{myCoursesView}">My Courses</a>
+                                            <a class="dropdown-item" href="createCourse.html" th:href="@{createCourse}">Create
+                                                Course</a>
+                                        </div>
+                                    </li>
+
+                                    <li sec:authorize="anonymous">
+                                        <a href="login.html" th:href="@{login}">
+                                            Sign in
+                                        </a>
+                                    </li>
+
+                                    <li class="active" sec:authorize="anonymous">
+                                        <a href="registration.html" th:href="@{registration}">
+                                            Registration
+                                        </a>
+                                    </li>
+
+                                    <li sec:authorize="hasAnyRole('ROLE_STUDENT')">
+                                        <a href="myCoursesView.html" th:href="@{/myCoursesView}">
+                                            My Courses
+                                        </a>
+                                    </li>
+                                    <li sec:authorize="hasAnyRole('ROLE_ADMIN')">
+                                        <a href="adminCourses.html" th:href="@{/adminCourses}">
+                                            Admin Panel
+                                        </a>
+                                    </li>
+                                    <li sec:authorize="hasAnyRole('ROLE_STUDENT','ROLE_TEACHER', 'ROLE_ADMIN')">
+                                        <a th:href="@{/logout}">
+                                            Logout
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            </nav>
+                            <div class="header_content_right ml-auto text-right">
+                                <div class="header_search">
+                                    <div class="search_form_container">
+                                        <form id="search_form" class="search_form trans_400" th:action="@{/courses}">
+                                            <input type="search" class="header_search_input trans_400" name="search"
+                                                   id="search" placeholder="What to learn today?"
+                                                   required="required">
+                                            <div class="search_button">
+                                                <i class="fa fa-search" aria-hidden="true"></i>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+
+                                <!-- Hamburger -->
+
+                                <div class="user container">
+                                    <a href="profile.html" th:href="@{/edit}">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+
+
+                                                <img class="rounded-circle"
+                                                     src="../static/img/intro.jpg"
+                                                     th:src="${(path != null && !#strings.isEmpty(path)) ? path : '/img/admin-create.png'}"
+                                                     width="50"
+                                                     height="50"
+                                                     th:width="50" th:height="50">
+                                                <!--                                                     th:alt="${loggedUser.getPhoto().getFileName()}" alt="user-pic">-->
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <span
+                                                        th:if="${loggedUser != null}"
+                                                        th:text="${loggedUser.getFirstName() + ' ' + loggedUser.getLastName()}">
+                                                    Firstname Lastname
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                    </a>
+                                </div>
+                                <div class="hamburger menu_mm">
+                                    <i class="fa fa-bars menu_mm" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </header>
+
+    <!-- Menu -->
+
+    <div class="menu d-flex flex-column align-items-end justify-content-start text-right menu_mm trans_400">
+        <div class="menu_close_container">
+            <div class="menu_close">
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+        <div class="search">
+            <form action="#" class="header_search_form menu_mm">
+                <input type="search" class="search_input menu_mm" placeholder="What to learn today?"
+                       required="required">
+                <button class="header_search_button d-flex flex-column align-items-center justify-content-center menu_mm">
+                    <i class="fa fa-search menu_mm" aria-hidden="true"></i>
+                </button>
+            </form>
+        </div>
+        <nav class="menu_nav">
+            <ul class="menu_mm">
+                <li class="menu_mm">
+                    <a href="index.html" th:href="@{index}">
+                        Home
+                    </a>
+                </li>
+                <li class="menu_mm">
+                    <a href="courses.html" th:href="@{courses}">
+                        Courses
+                    </a>
+                </li>
+                <li class="menu_mm" sec:authorize="anonymous">
+                    <a href="login.html" th:href="@{login}">
+                        Login
+                    </a>
+                </li>
+                <li class="menu_mm" sec:authorize="anonymous">
+                    <a href="registration.html" th:href="@{registration}">
+                        Registration
+                    </a>
+                </li>
+                <li class="menu_mm" sec:authorize="hasAnyRole('ROLE_TEACHER')">
+                    <a href="createCourse.html" th:href="@{/createCourse}">
+                        Create Course
+                    </a>
+                </li>
+                <li class="menu_mm" sec:authorize="hasAnyRole('ROLE_STUDENT','ROLE_TEACHER')">
+                    <a href="myCoursesView.html" th:href="@{/myCoursesView}">
+                        My Courses
+                    </a>
+                </li>
+                <li class="menu_mm" sec:authorize="hasAnyRole('ROLE_ADMIN')">
+                    <a href="adminCourses.html" th:href="@{/adminCourses}">
+                        Admin Panel
+                    </a>
+                </li>
+                <li class="menu_mm" sec:authorize="hasAnyRole('ROLE_STUDENT','ROLE_TEACHER', 'ROLE_ADMIN')">
+                    <a href="profile.html" th:href="@{/edit}">
+                        Profile
+                    </a>
+                </li>
+                <li class="menu_mm" sec:authorize="hasAnyRole('ROLE_STUDENT','ROLE_TEACHER', 'ROLE_ADMIN')">
+                    <a th:href="@{/logout}">
+                        Logout
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+    </div>
+
+    <!-- Home -->
+
+    <div class="home">
+        <div class="home_background" style="background-image: url(../static/img/registration-background.jpg);"
+             th:style="'background-image:url(\'' + @{/img/registration-background.jpg} + '\');'"></div>
+    </div>
+    <div class="home_content">
+        <div class="container">
+            <div class="row">
+                <div class="col text-center">
+                    <!--                    <h1 class="home_title">Register account <br/> (Student or Teacher)</h1>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<section class="blog_area section-padding-logreg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- Sing up Form Start -->
+                <section class="signup">
+                    <div class="container">
+                        <div class="signup-content">
+                            <div class="signup-form">
+                                <h3 class="form-title">Register</h3>
+                                <!--                                <p>-->
+                                <!--                                    <i th:if="${error != null}" th:text="${error}" style="color: red"/>-->
+                                <!--                                </p>-->
+                                <form action="#" enctype="multipart/form-data" th:action="@{/registration}"
+                                      th:object="${user}" method="POST"
+                                      class="register-form" id="register-form">
+
+                                    <div th:if="${exceptionMessage!=null}" style="color: red" type="text"
+                                         name="exception" readonly th:text="${exceptionMessage}"></div>
+                                    <br>
+                                    <div class="form-group">
+                                        <label for="username"><i
+                                                class="fa fa-user"></i></label>
+                                        <input type="text" th:field="*{username}" name="username" id="username"
+                                               placeholder="Username"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="first_name"><i
+                                                class="fa fa-address-card"></i></label>
+                                        <input type="text" th:field="*{firstName}" name="first_name" id="first_name"
+                                               placeholder="First name"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="last_name"><i
+                                                class="fa fa-address-card"></i></label>
+                                        <input type="text" th:field="*{lastName}" name="last_name" id="last_name"
+                                               placeholder="Last name"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email"><i class="fa fa-send"></i></label>
+                                        <input type="email" th:field="*{email}" name="email" id="email"
+                                               placeholder="Your Email"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email"><i class="fa fa-send"></i></label>
+                                        <input type="email" th:field="*{confirmEmail}" name="email" id="reemail"
+                                               placeholder="Confirm Email"/></div>
+                                    <div class="form-group">
+                                        <label for="pass"><i class="fa fa-unlock-alt"></i></label>
+                                        <input type="password" th:field="*{password}" name="pass" id="pass"
+                                               placeholder="Password"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="pass"><i class="fa fa-unlock-alt"></i></label>
+                                        <input type="password" th:field="*{confirmPassword}" name="pass" id="repass"
+                                               placeholder="Confirm Password"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label><i
+                                                class="fa fa-photo"></i></label>
+                                        <input type="file" name="photo" id="photo" class="form-control-file"
+                                               placeholder="Upload photo"/>
+                                    </div>
+                                    <div class="form-group form-button">
+                                        <input type="submit" name="signup" id="signup" class="form-submit"
+                                               value="Register"/>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="signup-image">
+                                <figure><img src="../static/img/signup-image.jpg" th:src="@{/img/signup-image.jpg}"
+                                             alt="sing up image"></figure>
+                                <a href="login.html" th:href="@{login}" class="signup-image-link">I am already
+                                    member</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- Sing up Form End-->
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!--================Blog Area =================-->
+<section class="blog_area section-padding-logreg">
+    <div class="container">
+        <div class="row">
+            <!-- Sign up form -->
+
+        </div>
+    </div>
+</section>
+<!--================Blog Area =================-->
+
+<!-- Footer -->
+
+<footer class="footer">
+    <div class="copyright">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <div class="copyright_content d-flex flex-md-row flex-column align-items-md-center align-items-start justify-content-start">
+                        <div class="cr">
+                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                            Copyright &copy;<script>
+                            document.write(new Date().getFullYear());
+                        </script>
+                            All rights reserved | This template is made with <i class="fa fa-heart-o"
+                                                                                aria-hidden="true"></i> by <a
+                                href="https://colorlib.com" target="_blank">Colorlib</a>
+                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        </div>
+                        <div class="cr_right ml-md-auto">
+                            <div class="footer_social">
+                                <span class="cr_social_title">follow us</span>
+                                <ul>
+                                    <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+</div>
+
+<!--    JavaScript links-->
+<script src="../static/js/jquery-3.2.1.min.js" th:src="@{/js/jquery-3.2.1.min.js}"></script>
+<script src="../static/css/bootstrap4/popper.js" th:src="@{/css/bootstrap4/popper.js}"></script>
+<script src="../static/css/bootstrap4/bootstrap.min.js" th:src="@{/css/bootstrap4/bootstrap.min.js}"></script>
+<script src="../static/plugins/OwlCarousel2-2.2.1/owl.carousel.js"
+        th:src="@{/plugins/OwlCarousel2-2.2.1/owl.carousel.js}"></script>
+<script src="../static/plugins/easing/easing.js" th:src="@{/plugins/easing/easing.js}"></script>
+<script src="../static/js/custom.js" th:src="@{/js/custom.js}"></script>
+</body>
+</html>

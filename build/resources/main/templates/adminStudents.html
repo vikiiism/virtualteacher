@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+
+    <!--    Title-->
+    <title>AdminStudents</title>
+
+    <!--    Metatags-->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Virtual Teacher Project">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--    CSS links-->
+    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap4/bootstrap.min.css"
+          th:href="@{/css/bootstrap4/bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" href="../static/plugins/font-awesome-4.7.0/css/font-awesome.min.css"
+          th:href="@{/plugins/font-awesome-4.7.0/css/font-awesome.min.css}">
+    <link rel="stylesheet" type="text/css" href="../static/plugins/OwlCarousel2-2.2.1/owl.carousel.css"
+          th:href="@{/plugins/OwlCarousel2-2.2.1/owl.carousel.css}">
+    <link rel="stylesheet" type="text/css" href="../static/plugins/OwlCarousel2-2.2.1/owl.theme.default.css"
+          th:href="@{/plugins/OwlCarousel2-2.2.1/owl.theme.default.css}">
+    <link rel="stylesheet" type="text/css" href="../static/plugins/OwlCarousel2-2.2.1/animate.css"
+          th:href="@{/plugins/OwlCarousel2-2.2.1/animate.css}">
+    <link rel="stylesheet" type="text/css" href="../static/css/main_styles.css" th:href="@{/css/main_styles.css}">
+    <link rel="stylesheet" type="text/css" href="../static/css/responsive.css" th:href="@{/css/responsive.css}">
+
+</head>
+
+<body>
+<div class="super_container">
+
+    <!-- Header -->
+
+    <header class="header">
+
+        <!-- Header Content -->
+
+        <div class="header_container">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <div class="header_content d-flex flex-row align-items-center justify-content-start">
+                            <div class="logo_container mr-auto">
+                                <a href="index.html" th:href="@{index}">
+                                    <div class="logo_text">
+                                        VirtualTeacher
+                                    </div>
+                                </a>
+                            </div>
+                            <nav class="main_nav_contaner">
+                                <ul class="main_nav">
+                                    <li>
+                                        <a href="adminCourses.html" th:href="@{adminCourses}">
+                                            Courses
+                                        </a>
+                                    </li>
+                                    <li class="active">
+                                        <a href="adminStudents.html" th:href="@{adminStudents}">
+                                            Students
+                                        </a>
+                                    </li>
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownMenuLink"
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Teachers
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                            <a class="dropdown-item" href="adminTeachers.html"
+                                               th:href="@{adminTeachers}">All teachers</a>
+                                            <a class="dropdown-item" href="approve.html" th:href="@{approve}">Approve
+                                                teacher</a>
+                                        </div>
+                                    </li>
+
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Admins
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                            <a class="dropdown-item" href="adminTeachers.html"
+                                               th:href="@{adminAdmins}">All admins</a>
+                                            <a class="dropdown-item" href="createAdmin.html" th:href="@{createAdmin}">Create
+                                                admin</a>
+                                        </div>
+                                    </li>
+                                    <li><a
+                                            th:href="@{/logout}">Logout</a></li>
+
+                                </ul>
+                            </nav>
+                            <div class="header_content_right ml-auto text-right">
+                                <div class="header_search">
+                                    <div class="search_form_container">
+                                        <form action="#" id="search_form" class="search_form trans_400">
+                                            <input type="search" id="myInput" onkeyup="myFunction()"  class="header_search_input trans_400"
+                                                   placeholder="Search by email..." required="required">
+                                            <div class="search_button">
+                                                <i class="fa fa-search" aria-hidden="true"></i>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+
+                                <!-- Hamburger -->
+
+                                <div class="user container">
+                                    <a href="profile.html" th:href="@{/edit}">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+
+
+
+                                                <img class="rounded-circle"
+                                                     src="../static/img/intro.jpg"
+                                                     th:src="${(path != null && !#strings.isEmpty(path)) ? path : '/img/admin-create.png'}" width="50"
+                                                     height="50"
+                                                     th:width="50" th:height="50" >
+<!--                                                     th:alt="${loggedUser.getPhoto().getFileName()}" alt="user-pic">-->
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <span
+                                                        th:text="${loggedUser.getFirstName() + ' ' + loggedUser.getLastName()}">
+                                                    Firstname Lastname
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                    </a>
+                                </div>
+
+
+                                <div class="hamburger menu_mm">
+                                    <i class="fa fa-bars menu_mm" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Menu -->
+
+    <div class="menu d-flex flex-column align-items-end justify-content-start text-right menu_mm trans_400">
+        <div class="menu_close_container">
+            <div class="menu_close">
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+        <nav class="menu_nav">
+            <ul class="menu_mm">
+                <li class="menu_mm"><a href="index.html" th:href="@{index}">Home</a></li>
+                <li class="menu_mm"><a href="adminCourses.html" th:href="@{adminCourses}">Courses</a></li>
+                <li class="menu_mm"><a href="adminStudents.html" th:href="@{adminStudents}">Students</a></li>
+                <li class="menu_mm"><a href="adminTeachers.html" th:href="@{adminTeachers}">Teachers</a></li>
+                <li class="menu_mm"><a href="approve" th:href="@{approve}">Approve Teachers</a></li>
+                <li class="menu_mm"><a href="adminAdmins" th:href="@{adminAdmins}">Admins</a></li>
+                <li class="menu_mm"><a href="createAdmin" th:href="@{createAdmin}">Create Admin</a></li>
+                <li class="menu_mm"><a href="profile.html" th:href="@{/edit}">Profile</a></li>
+                <li class="menu_mm"><a th:href="@{/logout}">Logout</a></li>
+            </ul>
+
+        </nav>
+
+    </div>
+
+    <!-- Home -->
+
+    <div class="home">
+        <div class="home_background" style="background-image: url(../static/img/index_background.jpg);"
+             th:style="'background-image:url(\'' + @{/img/index_background.jpg} + '\');'"></div>
+        <div class="home_content">
+            <div class="container">
+                <div class="row">
+                    <div class="col text-center">
+                        <h1 class="home_title">Students view </br> Disable /Enable /Promote</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Course -->
+
+    <div class="courses">
+        <div class="container">
+            <div class="row courses_row">
+                <div class="col-lg-12">
+                    <section class="section-padding">
+                        <table class="table table-hover table-bordered" id="myTable">
+                            <thead>
+                            <tr>
+                                <th scope="col">Student ID</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Operations</th>
+
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="user : ${listUsers}">
+                                <td th:text="${user.id}">Student ID</td>
+                                <td th:text="${user.email}">Email</td>
+                                <td th:text="${user.enabled}">Status</td>
+                                <td>
+                                    <a th:href="@{'/deleteStudent/' + ${user.id}}">Disable</a>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <a th:href="@{'/restoreStudent/' + ${user.id}}">Enable</a>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <a th:href="@{'/promoteStudent/' + ${user.id}}">Promote Teacher</a>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <a th:href="@{'/promoteStudentAdmin/' + ${user.id}}">Promote Admin</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+
+<footer class="footer">
+    <div class="copyright">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <div class="copyright_content d-flex flex-md-row flex-column align-items-md-center align-items-start justify-content-start">
+                        <div class="cr">
+                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                            Copyright &copy;<script>
+                            document.write(new Date().getFullYear());
+                        </script>
+                            All rights reserved | This template is made with <i class="fa fa-heart-o"
+                                                                                aria-hidden="true"></i> by <a
+                                href="https://colorlib.com" target="_blank">Colorlib</a>
+                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        </div>
+                        <div class="cr_right ml-md-auto">
+                            <div class="footer_social">
+                                <span class="cr_social_title">follow us</span>
+                                <ul>
+                                    <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+</div>
+
+<!--JavaScript links-->
+<script src="../static/js/jquery-3.2.1.min.js" th:src="@{/js/jquery-3.2.1.min.js}"></script>
+<script src="../static/css/bootstrap4/popper.js" th:src="@{/css/bootstrap4/popper.js}"></script>
+<script src="../static/css/bootstrap4/bootstrap.min.js" th:src="@{/css/bootstrap4/bootstrap.min.js}"></script>
+<script src="../static/plugins/OwlCarousel2-2.2.1/owl.carousel.js"
+        th:src="@{/plugins/OwlCarousel2-2.2.1/owl.carousel.js}"></script>
+<script src="../static/plugins/easing/easing.js" th:src="@{/plugins/easing/easing.js}"></script>
+<script src="../static/js/custom.js" th:src="@{/js/custom.js}"></script>
+<script>
+    function myFunction() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>
+</body>
+</html>

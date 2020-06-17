@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+
+    <!--    Title-->
+    <title>Courses</title>
+
+    <!--    Metatags-->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Virtual Teacher Project">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script th:inline="javascript">
+        //thymeleaf to javascript variables
+        /*<![CDATA[*/
+        var sortProperty = /*[[${sortBy}]]*/ null;
+        var sortDesc = /*[[${sortDesc}]]*/ null;
+        var currentPage = /*[[${currentPage}]]*/ 0;
+        var pageSize =/*[[${allCourses.size}]]*/ 0;
+        /*]]>*/
+
+        $(document).ready(function () {
+            //show up/down arrows
+
+            $("table#ops thead th").each(function () {
+                var head = $(this);
+                if (head.attr('data-sort-prop') === sortProperty) {
+                    head.append(sortDesc ? '▾' : '▴');
+                }
+            });
+
+
+            //set click action, reload page on clicking with all query params
+            $("table#ops thead th").click(
+                function () {
+                    var headerSortPropName = $(this).attr("data-sort-prop");
+                    if (headerSortPropName === sortProperty) {
+                        window.location.href = window.location.pathname +
+                            '?page=' + currentPage + '&size=' + pageSize + '&sort=' + headerSortPropName + ',' +
+                            (sortDesc ? 'asc' : 'desc');
+                    } else {
+                        window.location.href = window.location.pathname +
+                            '?page=' + currentPage + '&size=' + pageSize + '&sort=' + headerSortPropName + ',asc';
+                    }
+                });
+        });
+    </script>
+    <style>
+        table th {
+            user-select: none;
+            background: #eee;
+        }
+
+        table tr th:first-child {
+            width: 100px;
+        }
+
+        table tr th:nth-child(2) {
+            width: 150px;
+        }
+
+        table tr th:nth-child(3) {
+            width: 150px;
+        }
+
+        .pagination-div {
+            user-select: none;
+        }
+
+    </style>
+    <!--    CSS links-->
+    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap4/bootstrap.min.css"
+          th:href="@{/css/bootstrap4/bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" href="../static/plugins/font-awesome-4.7.0/css/font-awesome.min.css"
+          th:href="@{/plugins/font-awesome-4.7.0/css/font-awesome.min.css}">
+    <link rel="stylesheet" type="text/css" href="../static/plugins/OwlCarousel2-2.2.1/owl.carousel.css"
+          th:href="@{/plugins/OwlCarousel2-2.2.1/owl.carousel.css}">
+    <link rel="stylesheet" type="text/css" href="../static/plugins/OwlCarousel2-2.2.1/owl.theme.default.css"
+          th:href="@{/plugins/OwlCarousel2-2.2.1/owl.theme.default.css}">
+    <link rel="stylesheet" type="text/css" href="../static/plugins/OwlCarousel2-2.2.1/animate.css"
+          th:href="@{/plugins/OwlCarousel2-2.2.1/animate.css}">
+    <link rel="stylesheet" type="text/css" href="../static/css/courses.css" th:href="@{/css/courses.css}">
+    <link rel="stylesheet" type="text/css" href="../static/css/courses_responsive.css"
+          th:href="@{/css/courses_responsive.css}">
+</head>
+
+<body>
+
+<div class="super_container">
+
+    <header class="header">
+
+        <!-- Header Content -->
+
+        <div class="header_container">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <div class="header_content d-flex flex-row align-items-center justify-content-start">
+                            <div class="logo_container mr-auto">
+                                <a href="index.html" th:href="@{index}">
+                                    <div class="logo_text">
+                                        VirtualTeacher
+                                    </div>
+                                </a>
+                            </div>
+                            <nav class="main_nav_contaner">
+                                <ul class="main_nav">
+                                    <li>
+                                        <a href="index.html" th:href="@{index}">
+                                            Home
+                                        </a>
+                                    </li>
+                                    <li class="active">
+                                        <a href="courses.html" th:href="@{courses}">
+                                            Courses
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-item dropdown" sec:authorize="hasAnyRole('ROLE_TEACHER')">
+                                        <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownMenuLink"
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Teacher Courses
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                            <a class="dropdown-item" href="myCoursesView.html"
+                                               th:href="@{myCoursesView}">My Courses</a>
+                                            <a class="dropdown-item" href="createCourse.html" th:href="@{createCourse}">Create
+                                                Course</a>
+                                        </div>
+                                    </li>
+
+                                    <li sec:authorize="anonymous">
+                                        <a href="login.html" th:href="@{login}">
+                                            Sign in
+                                        </a>
+                                    </li>
+
+                                    <li sec:authorize="anonymous">
+                                        <a href="registration.html" th:href="@{registration}">
+                                            Registration
+                                        </a>
+                                    </li>
+
+                                    <li sec:authorize="hasAnyRole('ROLE_STUDENT')">
+                                        <a href="myCoursesView.html" th:href="@{/myCoursesView}">
+                                            My Courses
+                                        </a>
+                                    </li>
+                                    <li sec:authorize="hasAnyRole('ROLE_ADMIN')">
+                                        <a href="adminCourses.html" th:href="@{/adminCourses}">
+                                            Admin Panel
+                                        </a>
+                                    </li>
+                                    <li sec:authorize="hasAnyRole('ROLE_STUDENT','ROLE_TEACHER', 'ROLE_ADMIN')">
+                                        <a th:href="@{/logout}">
+                                            Logout
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            </nav>
+                            <div class="header_content_right ml-auto text-right">
+                                <div class="header_search">
+                                    <div class="search_form_container">
+                                        <form id="search_form" class="search_form trans_400" th:action="@{/courses}">
+                                            <input type="search" class="header_search_input trans_400" name="search"
+                                                   id="search" placeholder="What to learn today?"
+                                                   required="required">
+                                            <div class="search_button">
+                                                <i class="fa fa-search" aria-hidden="true"></i>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+
+                                <!-- Hamburger -->
+
+                                <div class="user container">
+                                    <a href="profile.html" th:href="@{/edit}">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+
+
+                                                <img class="rounded-circle"
+                                                     src="../static/img/intro.jpg"
+                                                     th:src="${(path != null && !#strings.isEmpty(path)) ? path : '/img/admin-create.png'}"
+                                                     width="50"
+                                                     height="50"
+                                                     th:width="50" th:height="50">
+                                                <!--                                                     th:alt="${loggedUser.getPhoto().getFileName()}" alt="user-pic">-->
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <span
+                                                        th:if="${loggedUser != null}"
+                                                        th:text="${loggedUser.getFirstName() + ' ' + loggedUser.getLastName()}">
+                                                    Firstname Lastname
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                    </a>
+                                </div>
+                                <div class="hamburger menu_mm">
+                                    <i class="fa fa-bars menu_mm" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </header>
+
+    <!-- Menu -->
+
+    <div class="menu d-flex flex-column align-items-end justify-content-start text-right menu_mm trans_400">
+        <div class="menu_close_container">
+            <div class="menu_close">
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+        <div class="search">
+            <form class="header_search_form menu_mm" th:method="POST">
+                <input type="text" class="search_input menu_mm" name="search2" id="search2"
+
+                       placeholder="What to learn today?"
+                       required="required">
+                <button type="submit"
+                        class="header_search_button d-flex flex-column align-items-center justify-content-center menu_mm">
+                    <i class="fa fa-search menu_mm" aria-hidden="true"></i>
+                </button>
+            </form>
+        </div>
+        <nav class="menu_nav">
+            <ul class="menu_mm">
+                <li class="menu_mm">
+                    <a href="index.html" th:href="@{index}">
+                        Home
+                    </a>
+                </li>
+                <li class="menu_mm">
+                    <a href="courses.html" th:href="@{courses}">
+                        Courses
+                    </a>
+                </li>
+                <li class="menu_mm" sec:authorize="anonymous">
+                    <a href="login.html" th:href="@{login}">
+                        Login
+                    </a>
+                </li>
+                <li class="menu_mm" sec:authorize="anonymous">
+                    <a href="registration.html" th:href="@{registration}">
+                        Registration
+                    </a>
+                </li>
+                <li class="menu_mm" sec:authorize="hasAnyRole('ROLE_STUDENT','ROLE_TEACHER')">
+                    <a href="myCoursesView.html" th:href="@{/myCoursesView}">
+                        My Courses
+                    </a>
+                </li>
+
+                <li class="menu_mm" sec:authorize="hasAnyRole('ROLE_TEACHER')">
+                    <a href="createCourse.html" th:href="@{/createCourse}">
+                        Create Course
+                    </a>
+                </li>
+
+                <li class="menu_mm" sec:authorize="hasAnyRole('ROLE_ADMIN')">
+                    <a href="adminCourses.html" th:href="@{/adminCourses}">
+                        Admin Panel
+                    </a>
+                </li>
+                <li class="menu_mm" sec:authorize="hasAnyRole('ROLE_STUDENT','ROLE_TEACHER', 'ROLE_ADMIN')">
+                    <a href="profile.html" th:href="@{/edit}">
+                        Profile
+                    </a>
+                </li>
+                <li class="menu_mm" sec:authorize="hasAnyRole('ROLE_STUDENT','ROLE_TEACHER', 'ROLE_ADMIN')">
+                    <a th:href="@{/logout}">
+                        Logout
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+    </div>
+
+    <!-- Home -->
+
+    <div class="home">
+        <div class="home_background" style="background-image: url(../static/img/courses-background.jpg);"
+             th:style="'background-image:url(\'' + @{/img/courses-background.jpg} + '\');'"></div>
+        <div class="home_content">
+            <div class="container">
+                <div class="row">
+                    <div class="col text-center">
+                        <h1 class="home_title">Browse all available courses</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Courses -->
+
+    <div class="courses" id="courses">
+        <div class="container">
+            <div class="row">
+
+                <table class="col-lg-12 text-center table table-bordered" id="ops">
+                    <thead>
+                    <tr>
+                        <th data-sort-prop="title">Title</th>
+
+                        <th data-sort-prop="avgRating">Rating</th>
+                    </tr>
+                    </thead>
+                </table>
+
+            </div>
+
+
+            <!-- Course -->
+
+            <div class="row courses_row">
+                <div class="col-lg-4 course_col" th:each="course: ${allCourses}">
+                    <div class="course">
+                        <div class="course_image"><img src="../static/img/course_6.jpg"
+                                                       th:src="@{'/coursePhotos/'+
+                                                       ${course.coursePhotos.get(course.coursePhotos.size()-1).getFileName()}}"
+                                                       alt=""></div>
+                        <div class="course_body">
+                            <div class="course_title">
+                                <a href="course.html" th:href="@{'/courses/'+${course.id}}" th:text="${course.title}"
+                                   th:alt="CourseTitle">
+                                    Course title
+                                </a>
+                            </div>
+                            <div class="course_info">
+                                <ul>
+                                    <li><span th:text="${course.author.firstName + ' ' + course.author.lastName}"
+                                              th:alt="Author"></span></li>
+                                    <li><span th:text="${course.topic.name}" th:alt="Topic"></span></li>
+                                </ul>
+                            </div>
+                            <div class="course_text">
+
+                            <p th:text="${#strings.abbreviate(course.description,200)}" th:alt="Description" ></p>
+                            </div>
+                        </div>
+                        <div class="course_footer d-flex flex-row align-items-center justify-content-start">
+                            <div class="course_students"><i class="fa fa-user" aria-hidden="true"></i><span
+                                                                                                               th:text="${course.usersEnrolled.size()}"></span>
+                            </div>
+                            <div class="course_rating ml-auto"><i class="fa fa-star"
+                                                                  aria-hidden="true"></i><span
+                                                                                                  th:text="${course.avgRating} % 1 == 0? ${course.avgRating} :${#numbers.formatDecimal(course.avgRating,0,2)}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--            <div class="row">-->
+            <!--                <div class="col">-->
+            <!--                    <div class="load_more_button"><a th:href="@{/courses(page=${currentPage},pageItems=6)}">load-->
+            <!--                        more</a></div>-->
+            <!--                </div>-->
+            <!--            </div>-->
+
+            <div class="row flex-row pagination-div" th:with="sortParam=${sortBy+','+(sortDesc?'desc':'asc')}">
+                <ul class="nav">
+                    <li class="col-lg-4 mt-auto"
+                        th:unless="${allCourses.totalPages == 0}"
+                        th:each="i:${#numbers.sequence(0,allCourses.totalPages -1)}">
+                        <a th:href="@{/courses(page=${i},size='6',sort=${sortParam})}" th:text="${i+1}" class="nav-link"
+                           th:classappend="${currentPage}==${i}?'active':''"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+
+    <footer class="footer">
+        <div class="copyright">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <div class="copyright_content d-flex flex-md-row flex-column align-items-md-center align-items-start justify-content-start">
+                            <div class="cr">
+                                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                                Copyright &copy;<script>
+                                document.write(new Date().getFullYear());
+                            </script>
+                                All rights reserved | This template is made with <i class="fa fa-heart-o"
+                                                                                    aria-hidden="true"></i> by <a
+                                    href="https://colorlib.com" target="_blank">Colorlib</a>
+                                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                            </div>
+                            <div class="cr_right ml-md-auto">
+                                <div class="footer_social">
+                                    <span class="cr_social_title">follow us</span>
+                                    <ul>
+                                        <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<script src="../static/js/jquery-3.2.1.min.js" th:src="@{/js/jquery-3.2.1.min.js}"></script>
+<script src="../static/css/bootstrap4/popper.js" th:src="@{/css/bootstrap4/popper.js}"></script>
+<script src="../static/css/bootstrap4/bootstrap.min.js" th:src="@{/css/bootstrap4/bootstrap.min.js}"></script>
+<script src="../static/plugins/OwlCarousel2-2.2.1/owl.carousel.js"
+        th:src="@{/plugins/OwlCarousel2-2.2.1/owl.carousel.js}"></script>
+<script src="../static/plugins/easing/easing.js" th:src="@{/plugins/easing/easing.js}"></script>
+<script src="../static/js/courses.js" th:src="@{/js/courses.js}"></script>
+</body>
+</html>
